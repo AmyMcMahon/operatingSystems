@@ -1,3 +1,5 @@
+package implement;
+
 import java.net.*;
 import java.util.Scanner;
 import java.io.*;
@@ -18,10 +20,10 @@ public class client {
                     PrintWriter pout = new PrintWriter(sock.getOutputStream(), true);
 
                     while (true) {
-                        // Send the user's input to the server
+                        // Send the user's input to the implement.server
                         pout.println(input);
 
-                        // Wait for a response from the server
+                        // Wait for a response from the implement.server
                         String serverResponse = bin.readLine();
                         System.out.println(serverResponse);
                         System.out.print("> ");
