@@ -1,21 +1,40 @@
 import java.net.*;
+import java.util.Scanner;
 import java.io.*;
 
 public class client {
     public static void main(String[] args) {
-        try {
-            Socket sock = new Socket("127.0.0.1", 6013);
-            InputStream in = sock.getInputStream();
-            BufferedReader bin = new BufferedReader(new InputStreamReader(in));
-            PrintWriter pout = new PrintWriter(sock.getOutputStream(), true);
+        Scanner scannerIn = new Scanner(System.in);
+        System.out.println("Welcome to the chatBot!, enter 'help' to see the functions of the chatbot");
+        System.out.print("> ");
+        boolean exit = false;
+        while (!exit) {
+            String input = scannerIn.nextLine();
+            if (input.equals("tell me a joke")) {
+                try {
+                    Socket sock = new Socket("127.0.0.1", 6013);
+                    InputStream in = sock.getInputStream();
+                    BufferedReader bin = new BufferedReader(new InputStreamReader(in));
+                    PrintWriter pout = new PrintWriter(sock.getOutputStream(), true);
 
-            pout.println("tell me a joke");
-            String response = bin.readLine();
-            System.out.println(response);
+                    while (true) {
+                        // Send the user's input to the server
+                        pout.println(input);
 
-            sock.close();
-        } catch (IOException ioe) {
-            System.err.println(ioe);
+                        // Wait for a response from the server
+                        String serverResponse = bin.readLine();
+                        System.out.println(serverResponse);
+                        System.out.print("> ");
+                        input = scannerIn.nextLine();
+                        if (input.equals("exit")) {
+                            exit = true;
+                        }
+                    }
+                } catch (IOException ioe) {
+                    System.err.println(ioe);
+                }
+            }
         }
     }
+
 }

@@ -24,6 +24,7 @@ public class server {
                         System.out.println(joke);
                     }
                 }
+
                 client.close();
                 sock.close();
             }
