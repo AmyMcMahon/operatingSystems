@@ -29,7 +29,7 @@ public class server {
 
     public static void main(String[] args) {
         try {
-            ServerSocket sock = new ServerSocket(6013);
+            ServerSocket sock = new ServerSocket(6013x);
             BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
 
             server serverInstance = new server();
