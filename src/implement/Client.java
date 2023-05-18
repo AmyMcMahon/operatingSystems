@@ -3,6 +3,8 @@ package implement;
 import java.net.*;
 import java.util.Scanner;
 import java.io.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Client {
     public static void main(String[] args) {
@@ -10,6 +12,10 @@ public class Client {
         System.out.println("Welcome to the chatBot!, enter 'help' to see the functions of the chatbot");
         System.out.print("> ");
         boolean exit = false;
+
+        // create the message queue
+        BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
+
         while (!exit) {
             String input = scannerIn.nextLine();
             try (Socket sock = new Socket("127.0.0.1", 6013)) {
@@ -29,8 +35,10 @@ public class Client {
                     if (input.equals("exit")) {
                         exit = true;
                     }
+                    // put the user's input in the queue
+                    messageQueue.put(input);
                 }
-            } catch (IOException ioe) {
+            } catch (IOException | InterruptedException ioe) {
                 System.err.println(ioe);
             }
 

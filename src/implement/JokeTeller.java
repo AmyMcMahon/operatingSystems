@@ -50,18 +50,19 @@ public class JokeTeller implements Runnable {
     public void run() {
         String joke = "";
         switch (jokeType) {
-            case JavaJoke -> {
+            case JavaJoke:
                 joke = "Java joke: " + getJoke(javaJokes);
                 System.out.println("Sent: " + joke);
-            }
-            case BatmanJoke -> {
+                break;
+            case BatmanJoke:
                 joke = "Batman joke: " + getJoke(batmanJokes);
                 System.out.println("Sent: " + joke);
-            }
-            case MathsJoke -> {
+                break;
+
+            case MathsJoke:
                 joke = "Maths joke: " + getJoke(mathsJokes);
                 System.out.println("Sent: " + joke);
-            }
+                break;
 
         }
 
@@ -72,6 +73,5 @@ public class JokeTeller implements Runnable {
         int randomIndex = random.nextInt(jokes.length);
         return jokes[randomIndex];
     }
-
 
 }
