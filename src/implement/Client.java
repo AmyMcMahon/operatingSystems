@@ -12,8 +12,7 @@ public class Client {
         boolean exit = false;
         while (!exit) {
             String input = scannerIn.nextLine();
-            try {
-                Socket sock = new Socket("127.0.0.1", 6013);
+            try (Socket sock = new Socket("127.0.0.1", 6013)) {
                 InputStream in = sock.getInputStream();
                 BufferedReader bin = new BufferedReader(new InputStreamReader(in));
                 PrintWriter pout = new PrintWriter(sock.getOutputStream(), true);

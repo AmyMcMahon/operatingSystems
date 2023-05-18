@@ -4,6 +4,7 @@ import java.net.*;
 import java.io.*;
 
 public class Server {
+    private ServerSocket serverSocket;
     public static void main(String[] args) {
         try {
             ServerSocket sock = new ServerSocket(6013);
@@ -13,21 +14,13 @@ public class Server {
                 PrintWriter pout = new PrintWriter(client.getOutputStream(), true);
                 String input;
                 while ((input = bin.readLine()) != null) {
-                    if (input.equalsIgnoreCase("tell me a joke")) {
-                        String[] jokeList = {"Why did the tomato turn red? Because it saw the salad dressing!",
-                                "Why was the math book sad? Because it had too many problems!",
-                                "Why did the mushroom go to the party? Because hes a Fungi",
-                                "What do you call a fish wearing a bow-tie? So-fish-ticated",
-                                "What do you call a fake noodle? An impasta!",
-                                "What do you call a cow with no legs? Ground beef!",
-                                "Why don't seagulls fly by the bay? Because then they would be bagels."};
-                        String joke = jokeList[(int) (Math.random() * jokeList.length)];
-                        pout.println(joke);
-                        System.out.println(joke);
-                    }
-                    if (input.equalsIgnoreCase("pun")) {
-                        Thread punThread = new Thread(new JokeTeller(JokeType.PunJoke, pout));
-                        punThread.start();
+                    if (input.equalsIgnoreCase("threads")) {
+                        Thread javaT = new Thread(new JokeTeller(JokeType.JavaJoke, pout));
+                        Thread batmanT = new Thread(new JokeTeller(JokeType.BatmanJoke, pout));
+                        Thread mathsT = new Thread(new JokeTeller(JokeType.MathsJoke, pout));
+                        javaT.start();
+                        batmanT.start();
+                        mathsT.start();
                     }
                 }
                 client.close();
@@ -35,6 +28,19 @@ public class Server {
             }
         } catch (IOException ioe) {
             System.err.println(ioe);
+        }
+    }
+
+    public void startServer() {
+        while (!serverSocket.isClosed()) {
+            try {
+                Socket socket = serverSocket.accept();
+                ClientThread clientThread = new ClientThread(socket);
+                System.out.println("User: '" + clientThread.getUsername() + "' has entered the chat!");
+
+                Thread t = new Thread(clientThread);
+                t.start();
+            } catch (IOException ignored) {}
         }
     }
 }
