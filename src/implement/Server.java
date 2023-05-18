@@ -13,7 +13,14 @@ public class Server {
             ServerSocket sock = new ServerSocket(6013);
             BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
             Server serverInstance = new Server();
-            Thread messageProcessorT = new Thread(() -> serverInstance.processMessages(messageQueue));
+            Thread messageProcessorT = new Thread(() -> {
+                try {
+                    serverInstance.processMessages(messageQueue);
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            });
             messageProcessorT.start();
             while (true) {
                 Socket client = sock.accept();
@@ -47,11 +54,14 @@ public class Server {
         }
     }
 
-    public void processMessages(BlockingQueue<String> messageQueue) {
+    public void processMessages(BlockingQueue<String> messageQueue) throws IOException {
+        ServerSocket sock = new ServerSocket(6013);
+        Socket client = sock.accept();
+        PrintWriter pout = new PrintWriter(client.getOutputStream(), true);
         while (true) {
             try {
                 String message = messageQueue.take();
-                if (message.equals("tell me a joke")) {
+                if (message.equals("threads")) {
                     Thread javaT = new Thread(new JokeTeller(JokeType.JavaJoke, pout));
                     Thread batmanT = new Thread(new JokeTeller(JokeType.BatmanJoke, pout));
                     Thread mathsT = new Thread(new JokeTeller(JokeType.MathsJoke, pout));
@@ -59,6 +69,8 @@ public class Server {
                     batmanT.start();
                     mathsT.start();
                 }
+                client.close();
+
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }

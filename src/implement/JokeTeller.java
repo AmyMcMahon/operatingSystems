@@ -66,6 +66,8 @@ public class JokeTeller implements Runnable {
 
         }
 
+        // String message = messageQueue.take();
+
         pout.println(joke);
     }
 
